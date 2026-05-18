@@ -1,6 +1,6 @@
 ---
 name: inventra-design-system-resources
-description: "Inventra Admin Design System reference. Contains the full artboard map, component catalog, and deep-analysis procedure for learning DS tokens and components via Paper MCP. Use this skill whenever you need to look up, verify, or learn Inventra DS components before designing or coding UI. Triggered by: 'check the design system', 'DS reference', 'what components exist', 'match the design system', or any design/coding task that touches Inventra admin UI."
+description: "Inventra Admin Design System reference. Contains the full artboard map, component catalog, and deep-analysis procedure for learning DS tokens and components via Paper MCP. Use this skill whenever you need to look up, verify, or learn Inventra DS components before designing or coding UI. Triggered by: 'check the design system', 'DS reference', 'what components exist', 'match the design system', 'let's create a new design for inventra', 'let's create a new feature for inventra' or any design/coding task that touches Inventra admin UI."
 ---
 
 # Inventra Design System Resources
