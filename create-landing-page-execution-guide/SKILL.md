@@ -1,6 +1,6 @@
 ---
 name: create-landing-page-execution-guide
-description: "Creates a step-by-step execution guide for building Inventra client sites using Claude Code. Use this skill whenever the user mentions: execution guide, build plan, step-by-step plan, build the site, how to build the site, implement the site, create the client site, implementation guide, 'how do I start coding', 'give me the prompts', Claude Code prompts, prompts for Claude Code, deploy guide, or similar variations. Also trigger when context indicates the user already has the site content ready (brand strategy + website content) and wants the next step, which is actually building it. This skill is the FINAL STEP of the Inventra site creation pipeline — it comes after brand research and site content."
+description: "Creates a step-by-step execution guide for building Inventra client sites using Claude Code. Use this skill whenever the user mentions: execution guide, build plan, step-by-step plan, build the site, how to build the site, implement the site, create the client site, implementation guide, 'how do I start coding', 'give me the prompts', Claude Code prompts, prompts for Claude Code, deploy guide, or similar variations. Also trigger when context indicates the user already has the design ready (Paper exports) and wants the next step, which is actually building it. This skill is the FINAL STEP of the Inventra site creation pipeline — it comes after brand research, site content, design system in Paper, and landing page design in Paper."
 ---
 
 # Execution Guide — Step-by-step Build Guide for Client Sites
@@ -9,28 +9,45 @@ Generates a complete, practical execution guide for building client sites using 
 
 ## Position in the Pipeline
 
-This skill is **step 3** (final) of the Inventra site creation pipeline:
-1. **Brand Research** (skill `inventra-brand-research`) → generates brand strategy
+This skill is **step 5** (final) of the Inventra site creation pipeline:
+1. **Brand Research + Visual Reference Analysis** (skill `brand-research`) → generates brand strategy, positioning, palette direction, fonts, tone. **Includes analysis of 2-4 reference site URLs** provided by the operator — Claude fetches each site, extracts design patterns (palette, typography, spacing, layout, atmosphere, component patterns), and includes a structured visual analysis in the brand strategy output. This visual analysis feeds directly into the DS and screen briefings.
 2. **Site Content** → text for all pages (manual or with skill `seo-content-writer`)
-3. **Execution Guide** (this skill) → step-by-step guide to build the site with Claude Code
+3. **Design System in Paper** (skill `design-system-creation`) → generates DS briefing informed by the visual reference analysis → operator runs in Paper → exports palette, typography, spacing, base components as PNG
+4. **Landing Page Design in Paper** (skill `inventra-app-design`) → generates screen briefing informed by the visual reference analysis → operator runs in Paper with DS loaded → exports all screens mobile-first as PNG
+5. **Execution Guide** (this skill) → step-by-step guide to build the site with Claude Code, using Paper exports as the primary visual reference
+
+**Why Paper comes before code:** Claude Code produces dramatically better results when it has actual designed screens to match, rather than vague descriptions or screenshots of other sites. The Paper exports serve as a pixel-level visual contract — Claude Code sees exactly what the final result should look like. This eliminates the back-and-forth of "make it more premium" or "spacing feels off" because the design decisions are already locked.
 
 ## Prerequisites: What Must Exist Before
 
 Before generating the guide, verify that these inputs exist:
 
-1. **Site content document** (required) — Markdown with all text for all pages, section by section. Format: `[CompanyName]_Website_Content_[language].md`
-2. **Brand strategy or brand kit** (required) — At minimum: colors (hex), fonts, tone of voice, visual references
-3. **Visual reference screenshots** (required) — 2-4 screenshots of existing sites that represent the desired visual direction. These can be:
-   - Sites in the client's niche that the operator wants to use as a base
-   - Aspirational reference sites (e.g., Vercel, Linear, Stripe, a premium clinic)
-   - A specific site the client sent saying "I want something like this"
-   - Screenshots from Dribbble, Behance, Pinterest that capture the mood
+1. **Brand strategy with visual reference analysis** (required) — Output of skill `brand-research`, which includes:
+   - Brand positioning, palette direction, fonts, tone of voice
+   - **Structured visual analysis of 2-4 reference sites** — the operator provides URLs of sites that represent the desired visual direction (competitor sites, aspirational references, or sites the client sent). During brand research, Claude fetches each URL, analyzes the design (palette, typography, spacing, layout patterns, atmosphere, component styles), and produces a structured visual summary. This analysis is what informs the DS and screen briefings in Paper.
    
-   These screenshots are essential because Claude Code analyzes them visually and extracts patterns of spacing, layout, visual rhythm, color usage, hierarchy, and atmosphere. Without screenshots, the visual output is generic. With screenshots, the output is dramatically better.
-   
-   **In the generated guide:** Screenshots should be referenced in `/docs/references/` and the operator should be instructed to drag the images along with the prompt into Claude Code.
+   **The reference URLs are collected at the start of the brand research step.** Ask the operator: "Send me 2-4 URLs of sites that represent the visual direction you want for this project — competitor sites, sites the client admires, or aspirational references from any industry." Claude will fetch and analyze each one.
 
-4. **Technical information** (ask if unknown):
+2. **Site content document** (required) — Markdown with all text for all pages, section by section. Format: `[CompanyName]_Website_Content_[language].md`
+
+3. **Design System exports from Paper** (required) — PNG exports of the design system created in Paper via skill `design-system-creation` (informed by the visual reference analysis from step 1). These include:
+   - Color palette with hex codes and roles
+   - Typographic scale and font pairing
+   - Spacing and radius tokens
+   - Base components (buttons, inputs, cards, etc.) with states
+   
+   Save exports in `/docs/design-system/` (e.g., `ds-palette.png`, `ds-typography.png`, `ds-components.png`)
+
+4. **Landing page screen exports from Paper** (required) — PNG exports of all screens designed in Paper via skill `inventra-app-design` (informed by the visual reference analysis from step 1). These are the **primary visual reference** for Claude Code. They include:
+   - Every page, designed mobile-first (375px viewport)
+   - Desktop adaptations for key pages (at minimum: Home, Services)
+   - All sections with final copy, colors, typography, spacing, and layout locked
+   
+   Save exports in `/docs/screens/` (e.g., `home-mobile.png`, `home-desktop.png`, `about-mobile.png`, `services-mobile.png`)
+   
+   **These Paper exports replace the old workflow of capturing screenshots from third-party sites.** The design is done before the code — Claude Code implements what Paper designed, not what it improvises from vague references.
+
+5. **Technical information** (ask if unknown):
    - How many pages does the site have?
    - Does it have a blog? If so, will Inventra's CMS API be integrated?
    - Does it have a mega menu or special navigation?
@@ -38,38 +55,58 @@ Before generating the guide, verify that these inputs exist:
    - CTA strategy (cal.com? WhatsApp? form?)
    - Domain
 
-If any required input is missing, notify the user and suggest running the corresponding skill first.
+If the Paper exports (items 3 and 4) are missing, **do not generate the guide**. Instead, recommend running the corresponding skills first:
+- Missing DS → run `design-system-creation` first
+- Missing screens → run `inventra-app-design` first
+- Missing both → run DS first, then screens (DS feeds into screens)
 
-## Visual Reference Workflow: Extracting from an Existing Site
+If the brand strategy or visual reference analysis is missing, notify the user and suggest running `brand-research` first — and remind them to bring 2-4 reference URLs ready.
 
-The most common scenario is: the client sends a site they like (or the operator chooses a reference site in the same niche) and wants "something similar but for my brand". The flow for this is:
+If only the content document is missing, the operator can create it manually or with a content writing skill.
 
-### How to Capture the References
+## Visual Reference Workflow: Paper-First Design
 
-1. **Open the reference site** in the browser
-2. **Take 2-4 screenshots** of the most important sections:
-   - Hero / first fold (the most important — sets the tone)
-   - A content/cards section in the middle
-   - Footer or CTA section
-   - An internal page if it has something interesting
-3. **Save the screenshots** in `/docs/references/` in the project (e.g., `ref-hero.png`, `ref-cards.png`)
-4. Optionally, **annotate what you like** in each screenshot (e.g., "love the generous spacing", "love the serif typography on headings", "love the dark background with gold accent")
+The design is done **before** the code. Paper produces the visual contract; Claude Code implements it.
 
-### What Claude Code Extracts from Screenshots
+### The Paper-First Flow
 
-When the operator drags the screenshots along with the prompt, Claude Code analyzes:
-- **Spacing and rhythm:** section padding, gap between elements, overall "breathing room"
-- **Layout:** centered vs. split, grid patterns, how sections connect
-- **Typography:** relative size, weight, serif/sans-serif hierarchy
-- **Colors:** how the palette is applied (not the colors themselves — the client's brand kit defines the colors)
-- **Atmosphere:** premium vs. casual, dark vs. light, minimal vs. decorative
-- **Details:** hover effects, accent lines, badges, border radius, shadows
+1. **Operator provides 2-4 reference site URLs** → competitor sites, aspirational references, or sites the client admires
+2. **Run `brand-research` skill** → Claude fetches each reference URL, analyzes the design visually, and produces brand strategy + structured visual reference analysis
+3. **Run `design-system-creation` skill** → generates a DS briefing informed by the visual reference analysis
+4. **Paste the DS briefing into Paper** → Paper generates palette, typography, spacing, components
+5. **Export the DS from Paper** as PNG → save in `/docs/design-system/`
+6. **Run `inventra-app-design` skill** → generates screen briefings with locked copy, informed by the visual reference analysis
+7. **Paste the screen briefing into Paper** (with the DS loaded) → Paper generates all screens mobile-first
+8. **Export all screens from Paper** as PNG → save in `/docs/screens/`
+9. **Now run this skill** → generates the execution guide that references those exports
 
-Claude Code does NOT copy the site — it extracts design patterns and applies them with the client's colors, fonts, and content. The result is a site visually influenced by the reference but with its own identity.
+### What Claude Code Gets from Paper Exports
 
-### When the Client Sends Their Current Site
+When the operator drags the Paper exports along with the prompt, Claude Code sees:
+- **Exact colors** — not "dark background" but the precise hex applied in context
+- **Exact typography** — not "serif headings" but the actual font at the actual size with the actual weight
+- **Exact spacing** — not "generous padding" but the real proportions between elements
+- **Exact layout** — not "centered hero" but the precise arrangement of elements, including responsive breakpoints
+- **Exact components** — not "a card with hover" but the actual card design with all states
+- **Exact atmosphere** — the full gestalt of the design, not a verbal approximation
 
-If the client already has a site and wants a redesign, capture screenshots of the current site as well. Place them in `/docs/references/old-site/`. In the design prompt, mention: "The client's current site screenshots are in /docs/references/old-site/ — use them to understand what to improve, not to replicate."
+This is dramatically better than screenshots of other sites, because:
+- There's no ambiguity about "which parts to copy" — everything in the export is intentional
+- The copy is already locked — Claude Code reads it from the image
+- The design decisions are already made — Claude Code just implements
+
+### When Paper Exports Are Not Available (Fallback)
+
+If the operator explicitly chooses to skip Paper (rare — only for very simple sites or tight deadlines), fall back to the old workflow:
+1. Capture 2-4 screenshots of reference sites in the client's niche
+2. Save in `/docs/references/`
+3. The execution guide will reference these screenshots instead
+
+**Always prefer Paper exports over screenshots.** The quality difference in Claude Code's output is significant.
+
+### When the Client Has a Current Site
+
+If the client already has a site and wants a redesign, capture screenshots of the current site and save in `/docs/references/old-site/`. These serve as context for what to improve, but the Paper exports remain the primary visual target.
 
 ## Guide Structure
 
@@ -128,11 +165,13 @@ Read the file `references/exemplo-inventra-execution-guide.md` for a complete ex
 
 Checklist with everything that needs to be ready before opening Claude Code:
 - [ ] Next.js boilerplate created and running locally (include the `npx create-next-app@latest` command)
-- [ ] Content file downloaded into the project
-- [ ] SVG logo in `/public/`
+- [ ] Content file downloaded into the project (in `/docs/`)
+- [ ] Design System exports from Paper in `/docs/design-system/` (palette, typography, spacing, components)
+- [ ] Landing page screen exports from Paper in `/docs/screens/` (all pages, mobile-first + desktop key pages)
+- [ ] SVG/PNG logo in `/public/`
 - [ ] Favicon and OG image prepared
-- [ ] Visual reference screenshots in `/docs/references/`
-- [ ] CTA links confirmed (cal.com, WhatsApp, etc.)
+- [ ] Secondary visual references in `/docs/references/` (optional — screenshots of inspiration sites or client's old site)
+- [ ] CTA links confirmed (cal.com, WhatsApp, Booksy, etc.)
 - [ ] Client-specific information (address, phone, license numbers, tax ID — whatever is relevant)
 
 ---
@@ -158,30 +197,31 @@ Estimated time: ~10-15 min (proportional to the number of pages)
 
 #### STEP 2 — Design tokens / system
 
-**This step uses visual reference screenshots.** The prompt MUST instruct the operator to drag the reference images along with the text into Claude Code. This is not optional — it's what makes the difference between a generic site and a professional-looking one.
+**This step uses the Design System exports from Paper.** The prompt MUST instruct the operator to drag the DS export images along with the text into Claude Code. This is not optional — Claude Code reads the exact tokens from the visual exports.
 
 The prompt should:
-- Start with: "I'm attaching reference images that represent the visual direction for this project. Analyze them carefully — pay attention to spacing, layout rhythm, color usage, typography hierarchy, and overall atmosphere."
-- Instruct the operator to drag reference screenshots along with the text
-- List the complete color palette (hex, token name, usage)
+- Start with: "I'm attaching the Design System created in Paper for this project. These images contain the exact palette, typography, spacing, and component specs. Implement these tokens exactly as shown — do not improvise colors, fonts, or spacing."
+- Instruct the operator to drag DS export images (`/docs/design-system/*.png`) along with the text
+- List the complete color palette (hex, token name, usage) — extracted from the DS export
 - Specify fonts using `next/font/google` (NEVER @import or <link>)
-- Define typographic hierarchy (h1-h6, body, labels, CTAs)
-- Define spacing tokens (section padding, container max-width, gaps)
+- Define typographic hierarchy (h1-h6, body, labels, CTAs) — matching the DS export
+- Define spacing tokens (section padding, container max-width, gaps) — matching the DS export
 - Describe the overall "vibe" in one sentence (e.g., "dark premium, tech-editorial" or "warm sophisticated, science clinic")
 - IMPORTANT: include the warning about not using @import url() for fonts
 
 The prompt should include a notice block like this:
 ```
-> **IMPORTANT:** When pasting this prompt, drag along the visual reference images
-> located in /docs/references/. Claude Code will analyze the style, layout,
-> spacing, and atmosphere of the references and apply them to the design system.
+> **IMPORTANT:** When pasting this prompt, drag along the Design System export images
+> from /docs/design-system/. Claude Code will read the exact palette, typography,
+> spacing, and component tokens from the exports and implement them precisely.
+> These are the source of truth — do not deviate from them.
 ```
 
 **Adapt for each project:**
-- Colors come from the client's brand kit
-- Fonts come from the brand strategy
-- The vibe comes from the visual references defined in the brand strategy
-- Spacing tokens should be inspired by the visual references
+- Colors come from the Paper DS export (which was built from the brand strategy)
+- Fonts come from the Paper DS export
+- Spacing tokens come from the Paper DS export
+- If the DS export includes component specs (button styles, card styles), reference them here so Claude Code creates reusable component primitives
 
 Estimated time: ~10 min
 
@@ -203,6 +243,8 @@ Estimated time: ~5 min
 
 This is the longest step. Divide into sub-prompts by page or group of pages.
 
+**Paper screen exports are the visual contract.** Each page prompt MUST instruct the operator to drag the corresponding Paper screen export(s) along with the prompt. Claude Code will implement the exact design shown in the export — this is not interpretation, it's implementation.
+
 **Design skill is mandatory.** Each page prompt MUST include the instruction for Claude Code to use the design/frontend skill. Add this line at the beginning of each prompt in this step:
 
 ```
@@ -211,19 +253,21 @@ Use the design-taste-frontend skill (and other frontend/design skills you have a
 
 If the operator doesn't have this skill installed in Claude Code, the prompts still work — but the visual output will be better with it. Mention this in the NOTES section of the guide.
 
-**Reference screenshots again.** In the Home page prompt (the first and most important), instruct the operator to drag the reference screenshots again. Claude Code can lose context between long prompts, so reinforcing the visual reference on the Home ensures the visual tone is nailed on the first try.
+**Paper exports for every page.** Each page prompt should instruct the operator to drag the corresponding screen export from `/docs/screens/`. For the Home page (the first and most important), include both mobile and desktop exports. Claude Code can lose context between long prompts, so always re-attach the relevant screen export for each page.
 
 **Golden rule:** Home page always first, in a separate prompt. It's the most complex page and sets the visual tone for the entire site.
 
 **For each page prompt, include:**
 - Instruction to use the design/frontend skill
+- Instruction to drag the corresponding Paper screen export(s) from `/docs/screens/`
 - Which page to build (file path)
-- Background for each section (dark/light — specify hex)
-- Layout for each section (centered, split, grid, etc.)
-- Specific design details (hover effects, accent lines, icons)
+- A note: "Match the design in the attached screen export exactly — colors, spacing, typography, layout, and component styles should be pixel-close to the export"
+- Background for each section (dark/light — specify hex, as shown in the export)
+- Layout for each section (centered, split, grid, etc. — as shown in the export)
+- Specific design details visible in the export (hover effects, accent lines, icons)
 - Which icons to use (Lucide React — list by name)
-- Responsiveness instructions
-- Animation instructions (framer-motion or CSS)
+- Responsiveness instructions: "The attached export is mobile-first (375px). For desktop (1280px+), [describe adaptations or attach desktop export]"
+- Animation instructions (framer-motion or CSS) — these are NOT in the Paper export, so specify them explicitly
 
 **Recommended order:**
 1. Home page (alone, it's the most important)
@@ -311,8 +355,10 @@ Estimated time: ~5 min
 #### NOTES
 
 Free-form section with project-specific tips. Always include:
-- **Visual reference matters a lot.** Dragging screenshots from the reference site along with the design prompts makes a huge difference in Claude Code's output quality. Without screenshots, the result is generic. With screenshots, the result is dramatically better.
+- **Paper exports are the source of truth.** Every page prompt should include the corresponding screen export from Paper. Claude Code implements the design — it doesn't improvise it. If the result doesn't match the export, iterate until it does.
+- **Design System exports matter for tokens.** The DS export from Paper contains the exact hex codes, font sizes, and spacing values. Always cross-reference when writing the design tokens prompt.
 - **Design skill in Claude Code.** If the operator has the `design-taste-frontend` skill installed in Claude Code, the design prompts (Step 3) will produce better results. If not, the prompts still work — the result is good, but the skill adds an extra level of visual refinement.
+- **Animations are NOT in Paper exports.** Paper produces static screens. All animation specs (fade-up on scroll, hover transitions, micro-interactions) must be written explicitly in the prompts. Specify these clearly in Step 3 and Step 5.
 - Build priority (if stuck, focus on the Home first)
 - Color usage tips (e.g., "gold as accent, not main color")
 - Typography tips (e.g., "Source Serif 4 only for headings, Geist for everything else")
@@ -327,6 +373,8 @@ Checklist of everything delivered to the client:
 - Site live (URL)
 - Brand strategy doc
 - Website content doc
+- Design System exports (from Paper)
+- Landing page screen exports (from Paper)
 - Pending items (i18n, live blog, etc.)
 
 ---
