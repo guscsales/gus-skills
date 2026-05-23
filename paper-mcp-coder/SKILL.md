@@ -1,6 +1,6 @@
 ---
 name: paper-mcp-coder
-description: Pixel-perfect rebuild of components from Paper artboards into the codebase. Use whenever the user wants to migrate a design from Paper into code, redesign an existing component to match a Paper artboard, or update a design system based on Paper. Triggers on phrases like "rebuild from Paper", "migrate Paper artboard", "update component from A0X", "redesign component from the design system in Paper", or "implement design from Paper into our app". Reads Paper via MCP using get_jsx + get_computed_styles (never screenshots as input), converts to the codebase's Tailwind v4 + token conventions in rem, and validates pixel parity in Chrome MCP before declaring complete.
+description: Pixel-perfect rebuild of components from Paper artboards into the codebase. Use whenever the user wants to migrate a design from Paper into code, redesign an existing component to match a Paper artboard, or update a design system based on Paper. Triggers on phrases like "rebuild from Paper", "migrate Paper artboard", "update component from A0X", "redesign component from the design system in Paper", or "implement design from Paper into our app". Auto-discovers all child nodes from a single artboard ID using get_children + get_tree_summary, then extracts each child via get_jsx + get_computed_styles (never screenshots as input), converts to the codebase's Tailwind v4 + token conventions in rem, and validates pixel parity in Chrome MCP before declaring complete.
 ---
 
 # paper-mcp-coder
@@ -17,7 +17,7 @@ Before any other step, verify:
 
 If any gate fails, do not proceed. Surface the blocker clearly.
 
-**Resolving the target node.** The task or invocation prompt should provide the Light reference node ID (and Dark reference, when applicable). Use those directly — do not require the user to select anything in Paper Desktop. If the invocation does NOT provide a node ID and `paper:get_selection` returns empty, ask the user once for the artboard name or node ID instead of demanding a selection.
+**Resolving the target artboard.** The user provides a single artboard ID (e.g., "rebuild welcome page from artboard 1JX-0"). The skill auto-discovers all children — no need for multiple node IDs. If the invocation does NOT provide an artboard ID, check `paper:get_selection`; if empty, call `paper:get_basic_info` to list all artboards and ask the user once which artboard to target.
 
 ## Core principles (non-negotiable)
 
@@ -38,17 +38,27 @@ These rules apply to every Paper-to-code migration. They exist because three pre
 
 Goal: end this phase with a complete, unambiguous spec for every component, variant, size, and state shown in the target artboard. Do this BEFORE writing any code.
 
+### Step 1 — Discover artboard structure
+
 1. `paper:get_basic_info` — confirm the file and page. Note artboard dimensions.
-2. **Resolve the target node ID(s).** Source order: (a) Light/Dark refs explicitly named in the task or invocation prompt; (b) `paper:get_selection` if the user happens to have something selected; (c) ask the user once for the node ID or artboard name. Do not require selection.
-3. `paper:get_tree_summary({ nodeId })` for the target node — get hierarchical overview. Identify each component's root node and its variants/states.
-4. For each component the artboard contains:
+2. **Resolve the target artboard ID.** Source order: (a) artboard ID from invocation prompt (e.g., "rebuild from artboard 1JX-0"); (b) `paper:get_selection` if something is selected; (c) list artboards via `get_basic_info` and ask the user which one.
+3. `paper:get_children({ nodeId: "<artboard-id>" })` — returns all top-level child nodes (sections, groups, frames). This reveals the artboard's layout: header, hero, form section, footer, etc.
+4. `paper:get_tree_summary({ nodeId: "<artboard-id>" })` — hierarchical structure with every node ID. Use this to identify each component's root node, its variants/states, and Light vs Dark cells. Map the tree to a list of component node IDs to extract.
+
+### Step 2 — Extract each child node
+
+For each component/section discovered in Step 1:
+
    - Call `paper:start_working_on_nodes({ nodeIds })` so the user sees progress in Paper.
    - Call `paper:get_jsx({ nodeId, format: "tailwind" })` — the JSX output is your structural and styling skeleton.
    - Call `paper:get_computed_styles({ nodeIds: [...all variant/state node IDs in batch, BOTH Light AND Dark cells] })` — exact CSS values per state, per mode.
    - Call `paper:get_font_family_info({ familyNames: [...] })` once for any custom fonts the artboard uses, to confirm availability.
    - Call `paper:get_fill_image({ nodeId })` only if the component has bitmap fills (icons/illustrations).
    - Build an internal spec table (in your reasoning, not as a file) with: variant, size, state, mode (Light/Dark), every CSS property and value (in rem after conversion), tokens needed, arbitrary values needed, and a Light vs Dark divergence column flagging properties where the two modes differ beyond token resolution.
-5. `paper:get_screenshot({ nodeId, scale: 1 })` for the artboard root — keep ONLY for the final visual verification step. Never use this as input for writing code.
+
+### Step 3 — Reference screenshot
+
+`paper:get_screenshot({ nodeId: "<artboard-id>", scale: 1 })` for the artboard root — keep ONLY for the final visual verification step. Never use this as input for writing code.
 
 If the artboard contains components with multiple variants/states displayed as separate cells (typical for design system artboards), each cell is a separate spec entry — capture them all.
 
@@ -144,10 +154,10 @@ If the deviation report is non-empty for any component when you've exhausted att
 
 ## Modes
 
-The skill supports two scopes, determined by the target node ID provided in the task:
+The skill supports two scopes, determined by the target ID provided in the task:
 
-- **Full artboard mode** — node ID points to an artboard root. The skill processes every component inside it.
-- **Single section / component mode** — node ID points to a section or specific component within an artboard. The skill processes only that scope, builds a partial showcase route (or appends to an existing one), validates only that scope. This is the recommended mode for dense artboards (e.g., A05 Form Controls with multiple sections) — go one section at a time, commit between each.
+- **Full artboard mode** — ID points to an artboard root. The skill calls `get_children` + `get_tree_summary` to discover every component inside it and processes them all.
+- **Single section / component mode** — ID points to a section or specific component within an artboard. The skill calls `get_children` on that section to discover its children, processes only that scope, builds a partial showcase route (or appends to an existing one), validates only that scope. This is the recommended mode for dense artboards (e.g., A05 Form Controls with multiple sections) — go one section at a time, commit between each.
 
 Detect mode by inspecting the result of `paper:get_node_info` on the target ID. If `component` is `Frame` and the node is the artboard root (no parent inside the page), you're in full artboard mode. Otherwise, single section / component mode.
 
@@ -156,7 +166,8 @@ Detect mode by inspecting the result of `paper:get_node_info` on the target ID. 
 Read tools (used in every run):
 - `paper:get_basic_info`
 - `paper:get_selection`
-- `paper:get_tree_summary`
+- `paper:get_children` (discover all child nodes of an artboard/section)
+- `paper:get_tree_summary` (hierarchical structure with node IDs)
 - `paper:get_jsx` (format: "tailwind")
 - `paper:get_computed_styles` (batch with all node IDs at once)
 - `paper:get_screenshot` (verification only, never as code input)
@@ -183,7 +194,7 @@ Write tools — NEVER used by this skill. This is a one-way migration from Paper
 When invoking this skill, the user should provide:
 
 - [ ] Paper Desktop is open with the correct file loaded
-- [ ] Target node ID(s) — Light reference and (when applicable) Dark reference — included in the invocation prompt or task
+- [ ] Target artboard ID (e.g., "rebuild from artboard 1JX-0") — the skill auto-discovers all children. No need for individual node IDs.
 - [ ] The dev server can run with `bun dev` (or project equivalent)
 - [ ] Chrome MCP is connected to a browser
 - [ ] The showcase route segment is named (e.g., `buttons`, `form-controls`, `badges`) — defaults to a sensible kebab-case if omitted
