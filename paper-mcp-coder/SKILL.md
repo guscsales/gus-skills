@@ -7,6 +7,10 @@ description: Pixel-perfect rebuild of components from Paper artboards into the c
 
 Pixel-perfect rebuild of UI from Paper artboards into the codebase. "Make it work, then make it right."
 
+## Completion rule (non-negotiable)
+
+**All 5 phases are mandatory. The task is NOT complete until Phase 5 passes.** Do not stop after Phase 2 because "it renders." Phase 3 (refactor) and Phase 4 (browser verify) are required — skipping them produces code that works but ships with arbitrary values, no token usage, and unverified visual parity. After each phase, explicitly state which phase you just finished and which phase you're starting next.
+
 ## Pre-flight (HARD GATES)
 
 Before any other step:
@@ -51,18 +55,24 @@ Optional supplementary calls (only when get_jsx output is ambiguous):
 Take the two JSX outputs (mobile + desktop) and create a **single working component**. Priority: it renders and matches Paper visually. Don't optimize yet.
 
 1. **Filter out metadata.** Remove any Paper annotation frames (state labels, breakpoint labels, artboard titles). Keep only the actual app UI content.
-2. **Merge mobile + desktop into one component.** Mobile JSX is the base. Desktop differences become `md:` utilities on the same elements. Common patterns:
+2. **Strip artboard containers.** Both mobile and desktop JSX will have a root wrapper with the artboard's fixed dimensions (e.g., `w-[375px]` for mobile, `w-[1440px]` for desktop). These represent the viewport, not the component. Remove them — the component's root should be fluid (`w-full`) and let the page layout control width.
+3. **Merge mobile + desktop into one component.** Compare both outputs element by element. Mobile JSX is the base. For every property that differs in desktop, add the desktop value with `md:` prefix on the same element. Common patterns:
    - `text-[40px] md:text-[88px]` (font scale)
    - `flex-col md:flex-row` (layout direction)
    - `px-6 md:px-20` (padding)
    - `w-full md:w-[540px]` (fixed widths)
    - `hidden md:block` / `md:hidden` (show/hide per breakpoint)
-3. **Map fonts to project tokens.** Replace Paper font-family CSS strings with the project's font token classes (discovered in Token resolution step).
-4. **i18n (if project uses it).** Check if the project has an i18n setup (translation files, `t()` helper, etc.). If yes, replace hardcoded text with translation keys. If no i18n exists, keep the text as-is from the mockup.
-5. **Wrap in React shell.** Add `'use client'`, imports, component export, existing event handlers / state / navigation logic.
-6. **Don't worry about** arbitrary values, rem conversion, existing components, or globals.css tokens yet. Just get it rendering correctly. Arbitrary Tailwind values in px are fine at this stage (`text-[88px]`, `p-[120px]`, `gap-[96px]`).
+   - `gap-4 md:gap-10` (spacing between children)
 
-**Checkpoint:** Open in browser. Does it match Paper? Fix until it does. Commit.
+   **Watch out for:**
+   - **Mobile widths leaking to desktop.** If mobile has `w-[335px]` and desktop has `w-[600px]`, the merged result should be something like `w-full max-w-[335px] md:max-w-[600px]` — not a bare `w-[335px]` that constrains desktop too.
+   - **Desktop containers.** Desktop layouts often need a centered container (`max-w-[1200px] mx-auto` or similar) that mobile doesn't have. Check if the desktop artboard shows content constrained to a centered column — if so, add a wrapper with `md:max-w-[...] md:mx-auto` even if mobile is edge-to-edge.
+4. **Map fonts to project tokens.** Replace Paper font-family CSS strings with the project's font token classes (discovered in Token resolution step).
+5. **i18n (if project uses it).** Check if the project has an i18n setup (translation files, `t()` helper, etc.). If yes, replace hardcoded text with translation keys. If no i18n exists, keep the text as-is from the mockup.
+6. **Wrap in React shell.** Add `'use client'`, imports, component export, existing event handlers / state / navigation logic.
+7. **Don't worry about** arbitrary values, rem conversion, existing components, or globals.css tokens yet. Just get it rendering correctly. Arbitrary Tailwind values in px are fine at this stage (`text-[88px]`, `p-[120px]`, `gap-[96px]`).
+
+**Checkpoint:** Open in browser. Does it match Paper? Fix until it does. Commit. Then say: "Phase 2 complete. Starting Phase 3 — refactor."
 
 ## Phase 3 — Make it right (refactor)
 
@@ -74,7 +84,7 @@ Once it works and matches Paper visually, clean up in small steps:
 4. **Extract reusable sub-components.** If a pattern repeats (card, list item, input group), extract to a separate file following project naming conventions.
 5. **Run tests.** Run the project's test suite for affected files — fix any failures. Commit after each refactor step.
 
-Each refactor step is a small commit. Stop when clean.
+Each refactor step is a small commit. Stop when clean. Then say: "Phase 3 complete. Starting Phase 4 — browser verify."
 
 ## Phase 4 — Browser verify
 
@@ -82,7 +92,19 @@ Each refactor step is a small commit. Stop when clean.
 2. Compare rendered output against Paper artboard screenshot (`paper:get_screenshot`).
 3. Check interactive states if the artboard shows them (hover, focus, disabled) — force pseudo-classes via `javascript_tool` and compare.
 4. Fix any visual discrepancies found — spacing, colors, font sizes, borders, shadows.
-5. Do NOT declare complete until browser matches Paper.
+5. Do NOT declare complete until browser matches Paper. Then say: "Phase 4 complete. Starting Phase 5 — final review."
+
+## Phase 5 — Final review
+
+Step back and review the full result end-to-end:
+
+1. **Re-read the component code.** Check for leftover artboard artifacts (hardcoded viewport widths, metadata text, Paper class names that slipped through).
+2. **Verify token usage.** Confirm arbitrary values only exist where no project token matches. No raw hex colors or px values that have token equivalents.
+3. **Verify responsiveness.** Resize the browser from mobile to desktop in Chrome MCP. Confirm layout transitions smoothly — no mobile widths constraining desktop, no desktop-only elements showing on mobile.
+4. **Verify interactivity.** Click through any interactive elements (buttons, links, forms). Confirm nothing is broken by the visual changes.
+5. **Run tests one final time.** Confirm green.
+
+If any issue found, fix it and re-verify. Then say: "Phase 5 complete. All phases done — task finished."
 
 ## Reference: Paper MCP tools used
 
