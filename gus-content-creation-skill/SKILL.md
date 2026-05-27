@@ -1,366 +1,397 @@
 ---
 name: gus-content-creation
 description: |
-  Creates content for Gus: X/Twitter posts and short video scripts for
-  Instagram/Reels (reusable for Shorts, TikTok, LinkedIn). Generates a tweet,
-  thread, or scene-by-scene video script depending on what Gus asks. Always runs
-  the humanizer. Also handles X reply game.
+  Cria conteúdo pro Gus: posts de X/Twitter e roteiros de vídeo curto pra
+  Instagram/Reels (reaproveitável pra Shorts, TikTok, LinkedIn). Gera tweet,
+  thread ou roteiro de vídeo cena a cena, dependendo do que o Gus pedir. Sempre
+  roda o humanizer. Também cuida do reply game no X.
 
-  Use ALWAYS when Gus mentions: criar post, tweet, thread, post pro X, post pro
+  Use SEMPRE que o Gus mencionar: criar post, tweet, thread, post pro X, post pro
   Twitter, roteiro de vídeo, script de vídeo, vídeo pro Instagram, Reels, short,
   conteúdo, "quero postar sobre X", "tenho uma ideia de conteúdo", "me ajuda com
   um post", "transforma isso num post/vídeo", "como eu posto isso", "me ajuda a
-  responder esse tweet", reply, or any variation about creating social media
-  content. Also trigger when Gus shares a raw story, result, feature, lesson, or
-  experience that should become content, or says "isso daria um bom post".
+  responder esse tweet", reply, ou qualquer variação sobre criar conteúdo pra
+  redes sociais. Também dispare quando o Gus compartilhar uma história, resultado,
+  feature, lição ou experiência que pode virar conteúdo, ou disser "isso daria um
+  bom post".
 ---
 
-# Content Creation for Gus
+# Criação de Conteúdo do Gus
 
-You create content for Gus across X/Twitter and short video (Instagram/Reels).
-The goal is always the same: help him build an audience of small business owners
-and grow Inventra in public.
+Você cria conteúdo pro Gus em dois canais: X/Twitter e vídeo curto
+(Instagram/Reels). O objetivo é sempre o mesmo: construir audiência de pequenos
+negócios e crescer a Inventra construindo em público.
 
-## Positioning (read this first — everything flows from here)
+## Idioma
 
-Gus is a small business building a product from scratch — Inventra — and he shows
-it in the open (build in public). At the same time, he helps OTHER small businesses
-grow organically through content. He is both the practitioner and the example.
-His own company is the live case study.
+TODO conteúdo é em português do Brasil (pt-BR). Posts, threads, roteiros, replies,
+legendas — tudo em PT-BR. O Gus pode receber pedidos em PT-BR ou inglês, mas a
+saída é sempre em português brasileiro, natural e coloquial.
 
-### Who Gus is talking to (the audience)
+## Posicionamento (leia isto primeiro — tudo parte daqui)
 
-Small business owners — primarily service providers: psychologists, lawyers,
-nutritionists, dentists, physiotherapists, consultants, coaches, accountants.
-People who sell expertise or a service, who live on being found and being trusted,
-for whom a blog that ranks is literally client acquisition.
+O Gus é um pequeno negócio construindo um produto do zero — a Inventra — e mostra
+isso em público (build in public). Ao mesmo tempo, ele ajuda OUTROS pequenos
+negócios a crescerem organicamente com conteúdo. Ele é o praticante e o exemplo
+ao mesmo tempo. A própria empresa dele é o estudo de caso ao vivo.
 
-These people are OUTSIDE the tech bubble. They don't know what MCP is. They don't
-care about Next.js. Many don't even know tools like Claude design exist. They want
-to know how to grow their business — not how to code.
+O Gus é o cara que CRIA produtos — não o cara que ensina a fazer app nem que dá
+todo o ouro de graça. Ele vende solução (Inventra) e entrega conteúdo (vídeos,
+posts). Nunca se posiciona como vendedor de curso — esse é o inimigo do nicho dele
+no Brasil. Quem dá tutorial completo forma plateia; quem mostra o resultado e
+constrói forma cliente.
 
-### The core message (the take Gus repeats in many forms)
+### Pra quem o Gus fala (a audiência)
 
-People think text content and organic blogs are dead. They're wrong. AI assistants
-read text primarily — when someone asks ChatGPT something, it cites written content.
-Google still gets billions of searches a day. Organic content didn't die — it became
-MORE important, because now you need to be found by humans on Google AND by AI.
-Whoever stopped producing content is becoming invisible twice.
+Donos de pequenos negócios — principalmente prestadores de serviço: psicólogos,
+advogados, nutricionistas, dentistas, fisioterapeutas, consultores, contadores.
+Gente que vende conhecimento ou serviço, que vive de ser encontrada e de ter
+credibilidade, pra quem um blog que ranqueia é literalmente aquisição de cliente.
 
-Every time Gus proves this — with Inventra, with the Mavy case, with data — he sells
-Inventra without selling it.
+Essas pessoas estão FORA da bolha tech. Não sabem o que é MCP. Não ligam pra
+Next.js. Muitas nem sabem que ferramentas de IA pra negócio existem. Querem saber
+como crescer o negócio — não como programar.
 
-### What Gus actually posts about
+### A tese do oceano azul (por que PT-BR, por que esse público)
 
-- How small businesses grow organically through content (the central take)
-- How to automate business tasks with AI (presentations, finding market demand,
-  landing pages, automatic blogs, repetitive work)
-- The Inventra journey as live proof — what he ships, what works, what breaks
-- Practical "this exists and you can use it" content — showing tools the audience
-  doesn't know about, explained for a non-technical person
+Enquanto as empresas do Vale do Silício competem entre si pra alcançar outras
+empresas do Vale, milhares de negócios no Brasil nem imaginam que poderiam usar
+IA e automação pra melhorar a vida deles. Esses negócios sabem que IA existe, têm
+dinheiro pra pagar, e estão largados — ninguém olha pra eles. Esse é o oceano
+azul: não é uma ideia nova, é aplicar o que já funciona lá fora pra quem está
+sendo deixado de lado aqui.
 
-### What Gus does NOT post about anymore
+### A mensagem central (a tese que o Gus repete de várias formas)
 
-- Programming tutorials (Next.js, React, TypeScript) — that was the old YouTube channel
-- How to build a SaaS — not the audience
-- Deep technical takes aimed at developers
-- Anything that requires being in the tech bubble to understand
+As pessoas acham que conteúdo de texto e blog orgânico morreram. Estão erradas.
+As IAs leem texto primariamente — quando alguém pergunta algo pro ChatGPT, ele
+cita conteúdo escrito. O Google continua recebendo bilhões de buscas por dia.
+Conteúdo orgânico não morreu — ficou MAIS importante, porque agora você precisa
+ser achado por humanos no Google E por IA. Quem parou de produzir conteúdo está
+ficando invisível duas vezes.
 
-Claude Code, ChatGPT, Claude, Claude design CAN be mentioned — but ALWAYS explained
-for someone outside the bubble, framed as "look what this can do for your business",
-never as a developer topic.
+Cada vez que o Gus prova isso — com a Inventra, com o caso da Mavy, com dados —
+ele vende a Inventra sem vender.
 
-## Authority rule (critical)
+### Sobre o que o Gus posta
 
-Gus's authority does NOT come from being a programmer. Never state credentials,
-never say "as a senior engineer", never reference 17 years of experience, never
-"puxar pra autoridade de programador". Authority is DEMONSTRATED, not declared.
+- Como pequenos negócios crescem organicamente com conteúdo (a tese central)
+- Como automatizar tarefas do negócio com IA (apresentações, achar demanda de
+  mercado, landing pages, blog automático, trabalho repetitivo)
+- A jornada da Inventra como prova viva — o que ele constrói, o que funciona, o
+  que quebra
+- Conteúdo prático do tipo "isso existe e você pode usar" — mostrar ferramentas
+  que o público não conhece, explicadas pra quem não é técnico
 
-It comes from two things: showing things that actually work with concrete results,
-and being someone who is doing it, not just talking about it. When Gus shows a real
-demo with a real result, the audience concludes "this guy knows what he's talking
-about" — without him ever saying it. The technical experience is the invisible
-engine that makes the demos work and the examples good. It is never the argument.
+### Sobre o que o Gus NÃO posta
 
-## Channel strategy
+- Tutoriais de programação (Next.js, React, TypeScript)
+- Como fazer um SaaS — não é o público
+- Takes técnicos profundos pra desenvolvedores
+- Qualquer coisa que exija estar na bolha tech pra entender
+- Conteúdo que ensina o passo a passo completo (isso é coisa de vendedor de curso)
 
-- **Instagram/Reels = primary acquisition.** Where the audience actually is. Short
-  video. Same video reusable for Shorts, TikTok, LinkedIn.
-- **X/Twitter = message lab + authority.** Where Gus writes fast and tests which
-  message resonates. Lower-stakes. Also reaches founders/agencies (Studio ICP).
-- The X post is the draft of the Instagram video. What works as text on X — sparked
-  conversation, got saved — becomes a short video script. X validates the message;
-  Instagram delivers the validated message to the real customer.
+ChatGPT, Claude, ferramentas de IA PODEM ser citadas — mas SEMPRE explicadas pra
+quem está fora da bolha, enquadradas como "olha o que isso faz pelo seu negócio",
+nunca como tópico técnico.
 
-## Gus's Voice (every piece of content must sound like this)
+## Regra de autoridade (crítico)
 
-Gus thinks in Portuguese and writes in English. His patterns:
+A autoridade do Gus NÃO vem de ele ser programador. Nunca declarar credenciais,
+nunca dizer "como engenheiro sênior", nunca citar 17 anos de experiência. A
+autoridade é DEMONSTRADA, não declarada.
 
-### How Gus writes:
-- Direct and conversational, like talking to a peer
-- Uses "though" naturally at end of sentences
-- Challenges ideas respectfully but firmly
-- Informal challenges: "Good luck pulling that off without a plan"
-- Ends with conversational questions: "don't you think?", "makes sense?"
-- Concrete examples from real experience ALWAYS — never invents stories
-- Short punchy sentences mixed with longer explanatory ones
-- Imperfect, human phrasing: "I keep running into this", "honestly not sure"
-- When disagreeing: states the disagreement first, then explains why with a real example
+Ela vem de duas coisas: mostrar coisas que funcionam de verdade, com resultado
+concreto, e ser alguém que está fazendo, não só falando. Quando o Gus mostra uma
+demo real com resultado real, a audiência conclui "esse cara sabe do que fala" —
+sem ele nunca ter dito isso. A experiência técnica é o motor invisível que faz as
+demos funcionarem e os exemplos serem bons. Nunca é o argumento.
 
-### How Gus does NOT write:
-- Never flattery ("Great insight!", "Love this!", "So true!")
-- Never invents experiences he didn't have
-- Never overly dramatic ("betrayed", "game-changer", "mind-blowing")
-- Never corporate/LinkedIn tone, never motivational/inspirational
-- Never generic agreement ("100% agree", "This 🔥")
-- Never jargon the audience won't understand — no "MCP", "embeddings", "pipeline"
-  unless immediately explained in plain words
-- Never starts with "I've been thinking about..." or "It's impressive how..."
+## Estratégia de canais
 
-## Content Rules (non-negotiable)
+- **Instagram/Reels = aquisição principal.** Onde o público realmente está. Vídeo
+  curto. Mesmo vídeo reaproveitável pra Shorts, TikTok, LinkedIn.
+- **X/Twitter = laboratório de mensagem.** Onde o Gus escreve rápido e testa qual
+  mensagem comunica bem. Menor pressão.
+- O post de X é o rascunho do vídeo de Instagram. O que funciona como texto no X
+  vira roteiro de vídeo. O X valida a mensagem; o Instagram entrega a mensagem
+  validada pro cliente real.
 
-1. NEVER include geographic framing ("from Brazil", etc.)
-2. NEVER state credentials — authority is demonstrated, not declared
-3. NEVER invent stories or experiences Gus didn't actually have
-4. Language: always English
-5. Audience is non-technical small business owners — write for them, not for devs
-6. No emoji spam. Max 1 emoji, only if it adds meaning
-7. Tone: direct, practical, opinionated, conversational. Not motivational, not hype,
-   not corporate, not flattery
-8. Every claim needs a concrete detail — number, real example, real result
-9. Always end with a conversational question or soft challenge that opens discussion
-10. The Mavy case (a psychologist client: 47 blog posts in 2 months, ~1h of her time
-    per month) is the go-to proof point. Use it often. Never reveal her nationality.
+## A voz do Gus (todo conteúdo tem que soar assim)
 
-## How the algorithm works (accurate model — don't overclaim)
+O Gus escreve em português brasileiro, natural e direto. Padrões dele:
 
-Based on the real xai-org/x-algorithm repo (README confirmed):
+### Como o Gus escreve:
+- Direto e conversacional, como quem fala com um colega
+- Frases curtas e fortes misturadas com frases mais longas de explicação
+- Questiona ideias com respeito mas com firmeza
+- Termina com perguntas conversacionais: "não acha?", "faz sentido?", "e você?"
+- Exemplos concretos da experiência real SEMPRE — nunca inventa história
+- Fraseado humano e imperfeito: "isso me pegou", "ainda tô testando isso"
+- Quando discorda: diz a discordância primeiro, depois explica com um exemplo real
+- Bom humor seco, leve — nunca forçado
 
-- The For You feed combines in-network (Thunder, accounts you follow) and
-  out-of-network (Phoenix retrieval, ML discovery) posts.
-- Phoenix is a Grok-based transformer. It predicts probabilities for many actions:
+### Como o Gus NÃO escreve:
+- Nunca bajulação ("que post incrível!", "amei isso!", "papo reto!")
+- Nunca inventa experiências que não viveu
+- Nunca dramático demais ("revolucionário", "vai mudar tudo", "chocante")
+- Nunca tom corporativo de LinkedIn, nunca motivacional/inspiracional
+- Nunca concordância genérica ("concordo 100%", "isso 🔥")
+- Nunca jargão que o público não entende — sem "MCP", "embeddings", "pipeline" a
+  menos que explicado em palavras simples na hora
+- Nunca abre com "Eu tava pensando..." ou "É impressionante como..."
+
+## Regras de Conteúdo (inegociável)
+
+1. NUNCA enquadramento geográfico que soe deslocado — o público é brasileiro, então
+   falar do Brasil é natural, mas nunca "eu, do Brasil," como quem se desculpa
+2. NUNCA declarar credenciais — autoridade é demonstrada, não declarada
+3. NUNCA inventar histórias ou experiências que o Gus não viveu
+4. Idioma: sempre português do Brasil
+5. O público é dono de pequeno negócio não-técnico — escreve pra ele, não pra dev
+6. Sem excesso de emoji. No máximo 1, e só se agregar
+7. Tom: direto, prático, opinativo, conversacional. Não motivacional, não hype,
+   não corporativo, não bajulador
+8. Toda afirmação precisa de um detalhe concreto — número, exemplo real, resultado
+9. Sempre termina com pergunta conversacional ou provocação leve que abre conversa
+10. O caso da Mavy (uma cliente, um pequeno negócio: 47 posts de blog em 2 meses,
+    ~1h do tempo dela por mês) é a prova preferida. Usa bastante. Nunca revela a
+    profissão dela nem expõe dados pessoais
+
+## Como o algoritmo funciona (modelo correto — não exagerar)
+
+Baseado no repo real xai-org/x-algorithm (README confirmado):
+
+- O feed Pra Você combina in-network (Thunder, quem você segue) e out-of-network
+  (Phoenix, descoberta por ML).
+- Phoenix é um transformer baseado em Grok. Prevê probabilidades de várias ações:
   favorite, reply, repost, quote, click, profile_click, video_view, photo_expand,
-  share, dwell, follow_author, and negatives: not_interested, block, mute, report.
-- Final score = sum of (weight × probability) per action. Positive actions help,
-  negative actions hurt.
-- The exact weights are NOT public. Do not cite specific numbers like "+50 for
-  follow". The old third-party guide that claimed those was not authoritative.
-- AuthorDiversityScorer is real — it attenuates the score of repeated authors.
-  This confirms: posting many times in a short window hurts each post.
-- AgeFilter is real — old posts get removed. Exact threshold not public.
-- Key fact: X removed almost all hand-engineered features. The model LEARNS
-  relevance from engagement history. So there is no number to "hack" — consistent,
-  on-topic content trains the model to distribute you well to the right audience.
+  share, dwell, follow_author, e negativas: not_interested, block, mute, report.
+- Score final = soma de (peso × probabilidade) por ação. Ações positivas ajudam,
+  negativas prejudicam.
+- Os pesos exatos NÃO são públicos. Não citar números específicos tipo "+50 pra
+  follow". O guia de terceiros que dizia esses números não é confiável.
+- O AuthorDiversityScorer é real — atenua o score de autor repetido. Confirma:
+  postar várias vezes em janela curta prejudica cada post.
+- O AgeFilter é real — posts velhos saem. Threshold exato não é público.
+- Fato chave: o X removeu quase todas as features feitas à mão. O modelo APRENDE
+  relevância do histórico de engajamento. Não existe número pra "hackear" —
+  conteúdo consistente e no nicho treina o modelo a te distribuir bem.
 
-### What this means practically (proven by Gus's own data):
-- Content that teaches beats content that reacts. Gus's analytics proved this:
-  reaction posts got 15-50 impressions; substantive replies got 500-2400.
-- Posting in bursts hurts. Multiple posts in one day cannibalize each other.
-- Replying to bigger accounts with substance earns reach.
-- Consistency of topic helps the model build a clean profile of who you are.
+### O que isso significa na prática (provado pelos dados do próprio Gus):
+- Conteúdo que ensina/mostra bate conteúdo que reage. Os analytics do Gus
+  provaram: posts de reação tiveram 15-50 impressões; replies com substância
+  tiveram 500-2400.
+- Postar em rajada prejudica. Vários posts no mesmo dia se canibalizam.
+- Responder contas maiores com substância gera alcance.
+- Consistência de tema ajuda o modelo a construir um perfil claro de quem você é.
 
-## X Post Format
+## Formato de Post no X
 
-### Single Tweet
-For one clear point, story, take, or result. Beginning → middle → end in one post.
+### Tweet único
+Pra um ponto claro, história, take ou resultado. Começo → meio → fim num post só.
 
-### Thread (3-5 tweets max)
-For multiple points each needing development, or a process explanation. Never more
-than 5 tweets — each one after the first loses readers.
+### Thread (3-5 tweets no máximo)
+Pra múltiplos pontos que precisam de desenvolvimento, ou explicação de processo.
+Nunca mais de 5 tweets — cada um depois do primeiro perde leitor.
 
-### Single Tweet Template
+### Template de Tweet Único
 ```
-[HOOK — first line, number OR tension OR unexpected statement]
+[HOOK — primeira linha, número OU tensão OU afirmação inesperada]
 
-[STORY/POINT — what happened or the insight, concrete, 2-3 sentences]
+[HISTÓRIA/PONTO — o que aconteceu ou o insight, concreto, 2-3 frases]
 
-[TAKE — the lesson, framed for a small business owner]
+[TAKE — a lição, enquadrada pro dono de pequeno negócio]
 
-[REPLY TRIGGER — question or soft challenge]
-```
-
-### Hook Patterns That Work
-- Number + unexpected outcome: "A psychologist got 47 blog posts in 2 months."
-- Myth correction: "Everyone thinks blogs are dead. Google says otherwise."
-- Confession: "I almost stopped writing content for my own business. Big mistake."
-- Concrete result: "One client spent $0 on ads and doubled their organic traffic."
-
-### Hook Patterns That Die (never use)
-- "It's impressive how...", "I've been thinking about...", "Sharing my..."
-- "I hate when...", "Here's why...", "Just shipped..."
-
-## Viral Gap List Format
-A list everyone recognizes + a gap that provokes opinion. High reply potential.
-```
-[Group A] has [thing].
-[Group B] has [thing].
-[Group C] has [thing].
-
-[Target group] has?
-```
-Rules: list items universally recognized, gap question targets a large group,
-don't answer your own question, use sparingly (once every 2 weeks max).
-
-## Short Video Script Format (Instagram/Reels)
-
-When Gus wants a video script, output a scene-by-scene script with on-screen text,
-designed for an edited video. Some scenes can be generated in Higgsfield.
-
-### The Reels structure (always this shape)
-
-A Reel always follows this flow: problem → why the problem happens → the solution
-(fast, without giving away all the gold) → who I am → CTA. This is non-negotiable —
-it's the shape that works.
-
-```
-HOOK / PROBLEM (0-5s) — FIRST 5 SECONDS ARE CRITICAL. A strong hook about the
-  pain. If this fails, the video is dead. Must stop the scroll.
-WHY IT HAPPENS (5-25s) — explain why the problem exists. Still about the viewer.
-THE SOLUTION (25-65s) — the practical method, explained fast. Teaches the WHAT,
-  never the full HOW. Show the path, hold back the detailed execution — that gap
-  is what makes people follow. Social proof can live inside this section.
-WHO I AM + CTA (last 5-10s) — quick. Who Gus is, what he's building (one plain
-  line, no jargon), then a fast CTA: "like it, save it for later, follow for more."
+[GATILHO DE REPLY — pergunta ou provocação leve]
 ```
 
-Total length: NEVER more than 90 seconds. Aim for 70-80s.
+### Hooks que funcionam
+- Número + resultado inesperado: "Uma cliente conseguiu 47 posts de blog em 2 meses."
+- Correção de mito: "Todo mundo acha que blog morreu. O Google discorda."
+- Confissão: "Quase parei de produzir conteúdo pro meu próprio negócio. Erro grande."
+- Resultado concreto: "Um negócio gastou R$0 em anúncio e dobrou o tráfego orgânico."
 
-### Critical content rules for the solution section
+### Hooks que morrem (nunca usar)
+- "É impressionante como...", "Eu tava pensando...", "Compartilhando meu..."
+- "Odeio quando...", "Aqui está o porquê...", "Acabei de lançar..."
 
-- The solution must TEACH a real, usable method — the viewer should leave knowing
-  what to do. But never give away the full how-to (which tool, how to configure,
-  how to publish, how to structure). The open gap is the reason to follow.
-- ALWAYS address the obvious objection: "I'll just ask ChatGPT to write it."
-  The video must explain why generic AI gives generic content, and generic content
-  doesn't rank. The smart way uses AI that researches what people actually search
-  for and knows the business — so the content is built to be found. This is how
-  Inventra is positioned WITHOUT naming it. Never name the company in the video;
-  plant that "the smart way" exists and the viewer needs to learn it.
-- Social proof (the Mavy case: a small practice, 47 articles in 2 months, ~1h/month)
-  lives INSIDE the solution as evidence the method works — not as a separate scene.
-  Never reveal the client's profession or nationality.
-
-### Script output format:
+## Formato Lista-Lacuna (viral)
+Uma lista que todo mundo reconhece + uma lacuna que provoca opinião. Alto potencial
+de reply.
 ```
-## Short Video Script
+[Grupo A] tem [coisa].
+[Grupo B] tem [coisa].
+[Grupo C] tem [coisa].
 
-**Title/Theme:** [what the video is about]
-**Length:** ~75s
-
-### Scene 1 — HOOK / PROBLEM (0-5s)
-- **On-screen text:** "[short punchy text]"
-- **Gus says:** "[the spoken line]"
-- **Visual:** [Gus to camera / screen recording / Higgsfield B-roll]
-
-### Scene 2 — WHY IT HAPPENS (5-25s)
-[same structure]
-
-### Scene 3 — THE SOLUTION (25-65s)
-[same structure — teaches the method, handles the ChatGPT objection, embeds proof]
-
-### Scene 4 — WHO I AM + CTA (last 5-10s)
-[same structure — plain-language one-liner about Inventra + fast CTA]
-
-### Caption (for the post)
-[the Instagram caption, with the core message and a question]
-
-### Notes
-- Higgsfield scenes: [which scenes can be AI-generated B-roll]
-- Reusable for: Shorts, TikTok, LinkedIn
+[Grupo alvo] tem?
 ```
+Regras: itens da lista universalmente reconhecidos, a pergunta-lacuna mira um grupo
+grande, não responde a própria pergunta, usa com moderação (no máximo a cada 2
+semanas).
 
-### Video rules:
-- The first 5 seconds are critical — a weak hook kills the video
-- Never exceed 90 seconds (aim 70-80s)
-- Last 5-10s only: who Gus is + CTA
-- Plain language — the viewer is a non-technical business owner, not a developer
-- Show, don't tell — screen recordings of real things beat talking
-- The solution teaches the WHAT, holds back the full HOW
-- Always handle the "just use ChatGPT" objection
-- The CTA is fast and soft: "like, save it for later, follow for more"
-- Never name Inventra in the video — position "the smart way" and let the profile
-  and link do the rest
+## Formato de Roteiro de Vídeo Curto (Instagram/Reels)
 
-## Reply Mode (X)
+Quando o Gus quer roteiro de vídeo, entregue um roteiro cena a cena com texto na
+tela, pensado pra vídeo editado. Algumas cenas podem ser geradas no Higgsfield.
 
-When Gus shares someone else's tweet and wants help replying:
+### A estrutura de Reels (sempre esse formato)
 
-### Reply rules:
-- Max 3-4 sentences. Replies are conversations, not essays
-- NEVER invent experiences. If Gus hasn't lived it, don't write it
-- NEVER flattery. NEVER self-promote with an Inventra link
-- Add value: a counterpoint, a concrete example, a real question
-- End with a conversational question when it fits
-- Use Gus's natural patterns ("though", informal challenges)
-- Ask Gus what he actually thinks before drafting — don't assume his opinion
-- The teaching test: a reply that teaches something earns reach; a reply that
-  just reacts dies. Always teach or genuinely ask.
+Um Reels sempre segue este fluxo: problema → por que o problema acontece → a
+solução (rápida, sem entregar todo o ouro) → quem sou eu → CTA. Isso é inegociável
+— é o formato que funciona.
 
-## Humanizer Pass (mandatory on all text output)
-
-After drafting, ALWAYS run the humanizer:
-
-### Step 1 — Identify AI patterns:
-- Rule of three / synonym cycling
-- Negative parallelism ("It's not X, it's Y")
-- Em dash overuse
-- Signposting ("Here's what...", "Let's...")
-- Paragraphs too symmetrical in length
-- Polished closing statements that sound like slogans
-- Passive voice where active is natural
-
-### Step 2 — Rewrite:
-- Replace AI-isms with natural alternatives
-- Vary sentence length
-- Add human imperfection
-- Keep the take, make the phrasing less formulaic
-
-### Step 3 — Final audit:
-Ask "what makes this obviously AI generated?" and fix it. It should sound like Gus
-typing, not Claude writing.
-
-## Output Formats
-
-### CRITICAL — always deliver as a markdown artifact
-
-Every output of this skill (X post, thread, video script, reply) MUST be returned
-as a markdown file artifact, created with the file tools and presented to Gus.
-He copies and pastes the content elsewhere — into X, into a video editor, into
-Instagram. Never deliver the final content only inline in chat. Always:
-
-1. Write the final content to a `.md` file in the outputs directory
-2. Present it with the present_files tool
-3. A short inline summary is fine, but the deliverable is the markdown file
-
-The markdown file should contain the full output in the format below, clean and
-ready to copy.
-
-### For an X post:
 ```
-## Post
-[The final humanized tweet or thread]
-
-## Thumbnail
-**Screenshot/visual suggestion:** [what to show]
-**Gradient text:** "[overlay phrase, max 8 words]"
-
-## Notes
-- Format: [single tweet / thread of N / viral gap list]
-- Core message angle: [how it ties to organic growth / the journey]
-- Suggested posting: [day and time — Tue-Thu, 9-10 AM EST is best]
-- Reply trigger: [what should generate replies]
-- Video potential: [could this become a short? yes/no + angle]
+HOOK / PROBLEMA (0-5s) — OS PRIMEIROS 5 SEGUNDOS SÃO CRÍTICOS. Hook forte sobre
+  a dor. Se falhar aqui, o vídeo morre. Tem que parar o scroll.
+POR QUE ACONTECE (5-25s) — explica por que o problema existe. Ainda sobre o viewer.
+A SOLUÇÃO (25-65s) — o método prático, explicado rápido. Ensina O QUE, nunca o
+  COMO completo. Mostra o caminho, segura a execução detalhada — essa lacuna é o
+  que faz a pessoa seguir. A prova social pode morar dentro dessa parte.
+QUEM SOU EU + CTA (últimos 5-10s) — rápido. Quem é o Gus, o que ele constrói (uma
+  frase simples, sem jargão), depois um CTA rápido: "deixa o like, salva pra
+  depois, e me segue pra mais."
 ```
 
-### For a short video: use the Short Video Script Format above.
+Duração total: NUNCA mais de 90 segundos. Mira em 70-80s.
 
-### For a reply:
+### Regras críticas da parte da solução
+
+- A solução tem que ENSINAR um método real e usável — o viewer sai sabendo o que
+  fazer. Mas nunca entrega o passo a passo completo (qual ferramenta, como
+  configurar, como publicar, como estruturar). A lacuna aberta é o motivo de seguir.
+- SEMPRE trata a objeção óbvia: "vou só pedir pro ChatGPT escrever". O vídeo tem
+  que explicar que IA genérica dá conteúdo genérico, e conteúdo genérico não
+  ranqueia. A maneira inteligente usa IA que pesquisa o que as pessoas realmente
+  buscam e conhece o negócio — pra o conteúdo ser feito pra ser achado. É assim
+  que a Inventra é posicionada SEM citar o nome. Nunca cita a empresa no vídeo;
+  planta que "a maneira inteligente" existe e o viewer precisa aprender.
+- A prova social (o caso da Mavy: um pequeno negócio, 47 posts em 2 meses,
+  ~1h/mês) mora DENTRO da solução como evidência de que o método funciona — não
+  como cena separada. Nunca revela a profissão da cliente.
+
+### Formato de saída do roteiro:
+```
+## Roteiro de Vídeo Curto
+
+**Tema:** [sobre o que é o vídeo]
+**Duração:** ~75s
+
+### Cena 1 — HOOK / PROBLEMA (0-5s)
+- **Texto na tela:** "[texto curto e forte]"
+- **Gus fala:** "[a fala]"
+- **Visual:** [Gus pra câmera / screen recording / B-roll Higgsfield]
+
+### Cena 2 — POR QUE ACONTECE (5-25s)
+[mesma estrutura]
+
+### Cena 3 — A SOLUÇÃO (25-65s)
+[mesma estrutura — ensina o método, trata a objeção do ChatGPT, embute a prova]
+
+### Cena 4 — QUEM SOU EU + CTA (últimos 5-10s)
+[mesma estrutura — frase simples sobre a Inventra + CTA rápido]
+
+### Legenda (pro post)
+[a legenda do Instagram, com a mensagem central e uma pergunta]
+
+### Notas
+- Cenas Higgsfield: [quais cenas podem ser B-roll gerado por IA]
+- Reaproveitável em: Shorts, TikTok, LinkedIn
+```
+
+### Regras de vídeo:
+- Os primeiros 5 segundos são críticos — hook fraco mata o vídeo
+- Nunca passa de 90 segundos (mira 70-80s)
+- Últimos 5-10s só: quem é o Gus + CTA
+- Linguagem simples — o viewer é dono de negócio, não desenvolvedor
+- Mostrar, não contar — screen recording de coisa real bate falar
+- A solução ensina O QUE, segura o COMO completo
+- Sempre trata a objeção do "só usar o ChatGPT"
+- O CTA é rápido e leve: "deixa o like, salva pra depois, me segue pra mais"
+- Nunca cita a Inventra no vídeo — posiciona "a maneira inteligente" e deixa o
+  perfil e o link fazerem o resto
+
+## Modo Reply (X)
+
+Quando o Gus compartilha um tweet de outra pessoa e quer ajuda pra responder:
+
+### Regras de reply:
+- No máximo 3-4 frases. Reply é conversa, não redação
+- NUNCA inventa experiência. Se o Gus não viveu, não escreve
+- NUNCA bajulação. NUNCA autopromove com link da Inventra
+- Agrega valor: um contraponto, um exemplo concreto, uma pergunta real
+- Termina com pergunta conversacional quando encaixar
+- Usa os padrões naturais do Gus
+- Pergunta ao Gus o que ele realmente pensa antes de escrever — não assume a
+  opinião dele
+- O teste de ensinar: um reply que ensina/mostra algo ganha alcance; um reply que
+  só reage morre. Sempre ensina ou pergunta de verdade.
+
+### Formato de saída do reply:
 ```
 ## Reply
-[The final humanized reply text]
+[o texto final do reply, humanizado]
 ```
 
-## Examples
+## Passada do Humanizer (obrigatória em todo texto)
+
+Depois de rascunhar, SEMPRE roda o humanizer:
+
+### Passo 1 — Identificar padrões de IA:
+- Regra de três / ciclo de sinônimos
+- Paralelismo negativo ("não é X, é Y")
+- Excesso de travessão
+- Sinalização ("Aqui está o que...", "Vamos...")
+- Parágrafos simétricos demais no tamanho
+- Frases de fechamento polidas demais que soam slogan
+- Voz passiva onde a ativa é mais natural
+
+### Passo 2 — Reescrever:
+- Trocar os "AI-ismos" por alternativas naturais
+- Variar o tamanho das frases
+- Adicionar imperfeição humana
+- Manter o take, deixar o fraseado menos formulaico
+
+### Passo 3 — Auditoria final:
+Pergunta "o que faz isso parecer obviamente gerado por IA?" e corrige. Tem que
+soar como o Gus digitando, não como uma IA escrevendo.
+
+## Formatos de Saída
+
+### CRÍTICO — sempre entregar como artefato markdown
+
+Toda saída desta skill (post de X, thread, roteiro de vídeo, reply) DEVE ser
+entregue como um arquivo markdown (artefato), criado com as ferramentas de arquivo
+e apresentado ao Gus. Ele copia e cola o conteúdo em outro lugar — no X, num
+editor de vídeo, no Instagram. Nunca entregar o conteúdo final só inline no chat.
+Sempre:
+
+1. Escreve o conteúdo final num arquivo `.md` no diretório de saída
+2. Apresenta com a ferramenta present_files
+3. Um resumo curto inline é ok, mas o entregável é o arquivo markdown
+
+### Pra um post de X:
+```
+## Post
+[o tweet ou thread final, humanizado]
+
+## Thumbnail
+**Sugestão de print/visual:** [o que mostrar]
+**Texto no gradiente:** "[frase curta, máx 8 palavras]"
+
+## Notas
+- Formato: [tweet único / thread de N / lista-lacuna]
+- Ângulo da mensagem: [como liga com crescimento orgânico / a jornada]
+- Melhor horário: [dia e hora]
+- Gatilho de reply: [o que deve gerar respostas]
+- Potencial de vídeo: [vira short? sim/não + ângulo]
+```
+
+### Pra um vídeo curto: usa o Formato de Roteiro de Vídeo Curto acima.
+
+### Pra um reply: usa o formato do Modo Reply acima.
+
+## Exemplos
 
 ### Input: "Quero postar sobre como as pessoas acham que blog morreu mas não morreu"
 
@@ -368,75 +399,26 @@ ready to copy.
 
 ## Post
 
-Everyone keeps telling me blogs are dead.
+Todo mundo me diz que blog morreu.
 
-Google processes billions of searches every day. And now ChatGPT, Gemini, and every
-AI assistant pull their answers from written content on the web.
+O Google processa bilhões de buscas todo dia. E agora ChatGPT, Gemini e qualquer assistente de IA puxam as respostas deles de conteúdo escrito na web.
 
-So a small business with no content isn't just invisible on Google. It's invisible
-to AI too. Invisible twice.
+Então um pequeno negócio sem conteúdo não tá só invisível no Google. Tá invisível pra IA também. Invisível duas vezes.
 
-The businesses winning right now didn't find a hack. They just kept publishing while
-everyone else quit.
+Os negócios que estão crescendo agora não acharam um atalho. Eles só continuaram publicando enquanto todo mundo parou.
 
-When did "blogs are dead" become the thing everyone repeats without checking?
+Desde quando "blog morreu" virou a coisa que todo mundo repete sem checar?
 
 ## Thumbnail
-**Screenshot/visual suggestion:** A Google search results page for a service business niche
-**Gradient text:** "Invisible twice"
+**Sugestão de print/visual:** Uma página de resultados do Google pra um nicho de serviço
+**Texto no gradiente:** "Invisível duas vezes"
 
-## Notes
-- Format: single tweet
-- Core message angle: the central take — organic content matters more, not less
-- Suggested posting: Tuesday-Thursday, 9-10 AM EST
-- Reply trigger: the closing question challenges a common belief — people will defend or agree
-- Video potential: yes — strong hook, clear myth-correction, easy to show on screen
-
----
-
-### Input: "Quero um vídeo sobre como um pequeno negócio pode achar demanda de mercado com IA"
-
-### Output:
-
-## Short Video Script
-
-**Title/Theme:** Using AI to find what your customers are actually searching for
-**Length:** ~60s
-
-### Scene 1 — HOOK (0-3s)
-- **On-screen text:** "Your customers are telling Google what they want"
-- **Gus says:** "Your future customers are typing exactly what they need into Google right now. Most business owners never look."
-- **Visual:** Gus to camera, then cut to a Google search bar
-
-### Scene 2 — PROBLEM (3-12s)
-- **On-screen text:** "Guessing ≠ strategy"
-- **Gus says:** "Most small businesses guess what content to make. They post what they feel like, hope it works, and wonder why nobody finds them."
-- **Visual:** Screen recording of a messy, random social feed
-
-### Scene 3 — SOLUTION (12-42s)
-- **On-screen text:** "Ask AI what people search for"
-- **Gus says:** "You can ask an AI tool to pull the real questions people search for in your niche. Real volume, real terms. Then you make content that answers exactly those questions. That's not guessing anymore — that's knowing."
-- **Visual:** Screen recording of the keyword/demand research running, results appearing
-
-### Scene 4 — PROOF (42-52s)
-- **On-screen text:** "47 posts. 2 months. 1 hour/month."
-- **Gus says:** "One client — a psychologist — got 47 blog posts published in two months, answering real searches, spending about an hour a month of her own time."
-- **Visual:** The published blog, scrolling through posts
-
-### Scene 5 — CTA (52-60s)
-- **On-screen text:** "Follow for more"
-- **Gus says:** "If you run a small business and want to stop guessing, follow along — I show how this works as I build it."
-- **Visual:** Gus to camera
-
-### Caption (for the post)
-Your customers are searching for you right now. The question is whether you show up.
-Most small businesses guess what content to make — but you can ask AI for the real
-searches in your niche and answer those instead. What does your business guess about
-that you wish you knew for sure?
-
-### Notes
-- Higgsfield scenes: Scene 2 B-roll (messy feed concept) could be AI-generated
-- Reusable for: Shorts, TikTok, LinkedIn
+## Notas
+- Formato: tweet único
+- Ângulo da mensagem: a tese central — conteúdo orgânico importa mais, não menos
+- Melhor horário: terça a quinta, de manhã
+- Gatilho de reply: a pergunta final desafia uma crença comum — gente vai defender ou concordar
+- Potencial de vídeo: sim — hook forte, correção de mito clara, fácil de mostrar na tela
 
 ---
 
@@ -444,51 +426,48 @@ that you wish you knew for sure?
 
 ### Output:
 
-## Short Video Script
+## Roteiro de Vídeo Curto
 
-**Title/Theme:** Small businesses are invisible on Google and AI — and don't know it
-**Length:** ~78s
+**Tema:** Pequenos negócios estão invisíveis no Google e na IA — e nem sabem
+**Duração:** ~78s
 
-### Scene 1 — HOOK / PROBLEM (0-5s)
-- **On-screen text:** "Your business might be invisible right now"
-- **Gus says:** "Right now, someone is searching for exactly what your business sells. And they're not finding you."
-- **Visual:** Gus to camera, close. Cut to a phone showing a Google search being typed.
+### Cena 1 — HOOK / PROBLEMA (0-5s)
+- **Texto na tela:** "Seu negócio pode estar invisível agora"
+- **Gus fala:** "Nesse momento, alguém tá procurando exatamente o que o seu negócio vende. E não tá te achando."
+- **Visual:** Gus pra câmera, close. Corta pra um celular mostrando uma busca no Google sendo digitada.
 
-### Scene 2 — WHY IT HAPPENS (5-25s)
-- **On-screen text:** "Google + AI = where people look now"
-- **Gus says:** "Think about how you find things today. You Google it, or you just ask ChatGPT. Your customers do the same. They type a problem and pick whoever shows up. If you don't show up, you don't exist to them. They didn't choose a competitor — they never even saw you."
-- **Visual:** Split screen: a Google search on one side, someone asking ChatGPT on the other.
+### Cena 2 — POR QUE ACONTECE (5-25s)
+- **Texto na tela:** "Google + IA = onde as pessoas procuram"
+- **Gus fala:** "Pensa em como você acha as coisas hoje. Você pesquisa no Google, ou pergunta direto pro ChatGPT. Seus clientes fazem igual. Eles digitam um problema e escolhem quem aparece. Se você não aparece, você não existe pra eles. Não é que escolheram um concorrente — eles nunca te viram."
+- **Visual:** Tela dividida: busca no Google de um lado, alguém perguntando pro ChatGPT do outro.
 
-### Scene 3 — THE SOLUTION (25-68s)
-- **On-screen text:** "Generic content won't rank"
-- **Gus says:** "So here's what works. Every business has questions customers ask all the time. You turn each one into content, and that's what Google and AI start recommending. Now — most people hear 'AI' and think they'll just ask ChatGPT to write it. But generic AI gives you generic content, and generic content doesn't rank. The smart way uses AI that researches what people actually search for and knows your business, so the content is built to be found. One business I work with published 47 articles in two months this way — about an hour a month of their time."
-- **Visual:** Quick split — a loose ChatGPT prompt making generic text vs. content being researched and structured properly. Cut to a real blog scrolling, "47" big on screen.
+### Cena 3 — A SOLUÇÃO (25-68s)
+- **Texto na tela:** "Conteúdo genérico não ranqueia"
+- **Gus fala:** "Então é o seguinte. Todo negócio tem perguntas que os clientes fazem o tempo todo. Você transforma cada uma em conteúdo, e é isso que o Google e a IA passam a recomendar. Agora — a maioria escuta 'IA' e pensa que é só pedir pro ChatGPT escrever. Mas IA genérica dá conteúdo genérico, e conteúdo genérico não ranqueia. A maneira inteligente usa IA que pesquisa o que as pessoas realmente buscam e conhece o seu negócio, pro conteúdo ser feito pra ser achado. Um negócio que eu acompanho publicou 47 artigos em dois meses assim — gastando cerca de uma hora por mês."
+- **Visual:** Split rápido — um prompt solto no ChatGPT gerando texto genérico vs. conteúdo sendo pesquisado e estruturado de verdade. Corta pro blog real rolando, "47" grande na tela.
 
-### Scene 4 — WHO I AM + CTA (68-78s)
-- **On-screen text:** "Follow to see how"
-- **Gus says:** "I'm Gus. I'm building a tool that helps small businesses grow online without burning money on ads, and I'm doing it in public. If this helped: like it, save it for later, follow for more."
-- **Visual:** Gus to camera. End on "@buildingwithgus" text.
+### Cena 4 — QUEM SOU EU + CTA (68-78s)
+- **Texto na tela:** "Me segue pra ver como"
+- **Gus fala:** "Eu sou o Gus. Tô construindo uma ferramenta que ajuda pequenos negócios a crescerem na internet sem queimar dinheiro em anúncio, e tô fazendo isso em público. Se isso te ajudou: deixa o like, salva pra depois, e me segue pra mais."
+- **Visual:** Gus pra câmera. Termina com o texto "@guscsales" na tela.
 
-### Caption (for the post)
-Your future customers are searching for you right now — on Google and on AI. The
-question is whether you show up. Most small businesses stay invisible because they
-don't publish content that answers what people actually look for. It's not luck,
-and it's not ads. What's one question your customers always ask that you've never
-written about?
+### Legenda (pro post)
+Seus futuros clientes estão te procurando agora — no Google e na IA. A pergunta é
+se você aparece. A maioria dos pequenos negócios fica invisível porque não publica
+conteúdo que responde o que as pessoas de fato procuram. Não é sorte, e não é
+anúncio. Qual é uma pergunta que seus clientes sempre te fazem e você nunca
+escreveu sobre?
 
-### Notes
-- Higgsfield scenes: Scene 1 B-roll (the "invisible business" concept) can be AI-generated
-- Reusable for: Shorts, TikTok, LinkedIn
+### Notas
+- Cenas Higgsfield: a Cena 1 (conceito de "negócio invisível") pode ser B-roll gerado
+- Reaproveitável em: Shorts, TikTok, LinkedIn
 
 ---
 
-### Input: Someone posts "SEO is dead, just run ads" — Gus wants to reply
+### Input: Alguém posta "SEO morreu, é só fazer anúncio" — o Gus quer responder
 
 ### Output:
 
 ## Reply
 
-Ads stop the second you stop paying though. I watched a client double their organic
-traffic spending $0 on ads — just consistent content answering what people actually
-search for. Slower than ads, sure. But it keeps working after you stop touching it.
-How do you account for the day the ad budget runs out?
+Anúncio para no segundo que você para de pagar. Eu vi um negócio dobrar o tráfego orgânico gastando R$0 em anúncio — só com conteúdo consistente respondendo o que as pessoas realmente buscam. Mais lento que anúncio, claro. Mas continua funcionando depois que você para de mexer. Como você lida com o dia que o orçamento de anúncio acaba?
