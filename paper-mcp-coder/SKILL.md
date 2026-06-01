@@ -11,6 +11,8 @@ Pixel-perfect rebuild of UI from Paper artboards into the codebase. "Make it wor
 
 **All 5 phases are mandatory. The task is NOT complete until Phase 5 passes.** Do not stop after Phase 2 because "it renders." Phase 3 (refactor) and Phase 4 (browser verify) are required — skipping them produces code that works but ships with arbitrary values, no token usage, and unverified visual parity. After each phase, explicitly state which phase you just finished and which phase you're starting next.
 
+**Validate before you transform.** The raw `get_jsx` output MUST be pasted into a temporary file and rendered to confirm a faithful copy *before* any merge or transformation begins (Phase 1). This isolates extraction bugs from transformation bugs. **Any temp files you create MUST be deleted before the task is done** (verified in Phase 5).
+
 ## Pre-flight (HARD GATES)
 
 Before any other step:
@@ -34,7 +36,7 @@ If Paper MCP is unavailable, do not proceed.
 
 Before writing any code, read `globals.css` (or the project's equivalent theme file) to discover existing design tokens — fonts, colors, spacing, radii, shadows. Map Paper's raw values to project tokens wherever a match exists. Only use arbitrary Tailwind values for one-offs with no token equivalent.
 
-## Phase 1 — Extract (copy-paste from Paper)
+## Phase 1 — Extract & validate (copy-paste from Paper, then prove the copy)
 
 For each screen:
 
@@ -49,6 +51,18 @@ Optional supplementary calls (only when get_jsx output is ambiguous):
 - `paper:get_font_family_info({ familyNames: [...] })` — confirm font availability (once per session)
 
 **That's it for extraction.** No tree walking, no per-node crawling, no spec tables.
+
+### Validate the raw extraction (HARD GATE — do this before Phase 2)
+
+The point of this gate: prove the `get_jsx` copy is correct and complete *in isolation*, so that if something looks wrong later you know it's your transformation — not a bad extraction.
+
+1. **Paste raw into a temp JSX file.** For each artboard, drop the **unmodified** `get_jsx` output into a throwaway component the dev server can render — e.g. a scratch route like `app/_paper-tmp/<screen>-mobile.tsx` and `<screen>-desktop.tsx`. Raw copy only: no merging, no token mapping, no edits. Wrap minimally so it compiles (`export default function Tmp() { return (<raw JSX/>) }`).
+2. **Render and compare.** Open the temp file in the browser. Compare side-by-side against `paper:get_screenshot` of that same artboard.
+3. **Confirm the right, complete template was copied.** Check the structure and content match Paper — no truncated sections, no missing elements, no wrong artboard. You are verifying *extraction fidelity*, not polishing pixels.
+4. **Gate:** Do NOT start Phase 2 until each raw extraction renders and matches its Paper artboard. If it doesn't match, the extraction is wrong — re-run `get_jsx` (check you used the right `nodeId`) before going further.
+5. **Record the temp file paths.** They MUST be deleted in Phase 5.
+
+**Checkpoint:** Say: "Phase 1 complete (extraction validated). Starting Phase 2 — make it work."
 
 ## Phase 2 — Make it work (raw merge)
 
@@ -72,7 +86,7 @@ Take the two JSX outputs (mobile + desktop) and create a **single working compon
 6. **Wrap in React shell.** Add `'use client'`, imports, component export, existing event handlers / state / navigation logic.
 7. **Don't worry about** arbitrary values, rem conversion, existing components, or globals.css tokens yet. Just get it rendering correctly. Arbitrary Tailwind values in px are fine at this stage (`text-[88px]`, `p-[120px]`, `gap-[96px]`).
 
-**Checkpoint:** Open in browser. Does it match Paper? Fix until it does. Commit. Then say: "Phase 2 complete. Starting Phase 3 — refactor."
+**Checkpoint:** Open in browser. Does it match Paper? Since the raw extraction was already validated in Phase 1, any visual breakage here is a *merge/transform* bug — not an extraction problem. Fix it in this component. Commit. Then say: "Phase 2 complete. Starting Phase 3 — refactor."
 
 ## Phase 3 — Make it right (refactor)
 
@@ -99,6 +113,7 @@ Each refactor step is a small commit. Stop when clean. Then say: "Phase 3 comple
 Step back and review the full result end-to-end:
 
 1. **Re-read the component code.** Check for leftover artboard artifacts (hardcoded viewport widths, metadata text, Paper class names that slipped through).
+2. **Delete temp extraction files.** Remove every temp file created in Phase 1 (the `app/_paper-tmp/` route or equivalent). Grep the repo for the temp dir/route to confirm none remain — shipping scratch files is a failure.
 2. **Verify token usage.** Confirm arbitrary values only exist where no project token matches. No raw hex colors or px values that have token equivalents.
 3. **Verify responsiveness.** Resize the browser from mobile to desktop in Chrome MCP. Confirm layout transitions smoothly — no mobile widths constraining desktop, no desktop-only elements showing on mobile.
 4. **Verify interactivity.** Click through any interactive elements (buttons, links, forms). Confirm nothing is broken by the visual changes.
