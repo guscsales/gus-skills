@@ -173,6 +173,7 @@ python3 scripts/post_review_comments.py --pr <N> --comments /tmp/pr<N>-comments.
 
 **Comment style:**
 - Plain prose, no severity labels, no `Blocking`/`🔴`, no prefix. The comment must stand on its own: *what* is wrong and *where*, *why it matters* (with the triggering condition), and an optional fix (code block if small).
+- **Break a substantial comment into short paragraphs** for scannability — typically: the problem (what + where) → the impact / when it triggers → the fix or suggestion (code block if small) → an optional "worth a quick check" note. Don't cram it into one dense block. A one-line nit stays one line — don't pad to manufacture paragraphs.
 - **Cite the rule** it violates — the repo doc section or the bundled baseline section — woven into the prose, not as a label. It's what makes the comment defensible rather than an opinion.
 - **Prefer questions over accusations** when intent or config is uncertain. Not *"This is broken,"* but *"Is this endpoint expected to receive X from the UI? If so, this path may fail when Y."* — it's more accurate and far less abrasive.
 - **Footer: identify the assistant running the review** — `🤖 Claude review`, `🤖 Cursor review`, `🤖 Codex review`, etc. Use your own identity; don't hardcode another tool's name. Nothing else in the footer — the reviewer-persona tags (`[REVIEWER BE]` etc.) are a chat-only signal and must NOT appear in the posted comment.
