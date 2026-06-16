@@ -56,12 +56,17 @@ A finding with no citable rule (repo § or baseline §) is a preference → drop
    gh pr diff <N> > /tmp/pr<N>.diff
    gh pr view <N> --json headRefOid -q '.headRefOid'   # pin SHA; inline comments anchor to it
    ```
-2. **Discover project standards** — probe, in order, `.ai/`, `.ai.local/`, root `*.md` (`CLAUDE.md`/`AGENTS.md`/`ARCHITECTURE.md`/`SECURITY.md`/…), `docs/`, `.cursor/rules/`, and `.github/` (PR template). Build a *dimension → doc* map for this repo — there is no fixed mapping, repos differ (e.g. kiosk: `.ai/ARCHITECTURE.md`, `TESTING.md`, `CONVENTIONS.md`, `PATTERNS.md`, the M1 metrics rule, **no** security doc; inventra adds `BILLING.md`/`I18N.md`; ai-skills keeps standards at root). Note which dimensions have a repo doc and which fall back to a bundled baseline (per Standards & precedence). Also read the linked ticket/PRD for *intent* — never flag something that matches a documented convention or the ticket's stated goal.
-3. **Locate the related work** (Deep/Migration/Security). The consuming code often lives in other repos:
+2. **Mark the chapter & read prior review state.** Call `mark_chapter` with `"<repo> PR #<n> review"` so the work is labeled and navigable (there's no session-rename tool — this is the closest). Then read what's already on the PR — this matters on re-runs:
+   - Existing inline comments + replies + resolution state: `gh api repos/<owner>/<repo>/pulls/<N>/comments --paginate`; for resolved/unresolved threads use GraphQL `reviewThreads { isResolved comments { author body } }`.
+   - Review summaries: `gh api repos/<owner>/<repo>/pulls/<N>/reviews`. Issue-level comments: `gh pr view <N> --json comments`.
+   - If *you* (this skill) reviewed before, find your prior comments by their `🤖 … review` / `[REVIEWER …]` footer, note the commit they anchored to, and read `git log <that-sha>..HEAD` for what changed since.
+   Carry this forward so you don't repeat yourself: a point already commented (yours or another reviewer's) and still open → don't duplicate; one the author replied to as intended/done/won't-fix → respect it (re-raise only as a question referencing their reply if you still disagree); one fixed in later commits → verify against current code and drop if resolved.
+3. **Discover project standards** — probe, in order, `.ai/`, `.ai.local/`, root `*.md` (`CLAUDE.md`/`AGENTS.md`/`ARCHITECTURE.md`/`SECURITY.md`/…), `docs/`, `.cursor/rules/`, and `.github/` (PR template). Build a *dimension → doc* map for this repo — there is no fixed mapping, repos differ (e.g. kiosk: `.ai/ARCHITECTURE.md`, `TESTING.md`, `CONVENTIONS.md`, `PATTERNS.md`, the M1 metrics rule, **no** security doc; inventra adds `BILLING.md`/`I18N.md`; ai-skills keeps standards at root). Note which dimensions have a repo doc and which fall back to a bundled baseline (per Standards & precedence). Also read the linked ticket/PRD for *intent* — never flag something that matches a documented convention or the ticket's stated goal.
+4. **Locate the related work** (Deep/Migration/Security). The consuming code often lives in other repos:
    - First, search by the ticket ID in the title (e.g. `gh search prs --owner <org> "CNC-1624"`).
    - **If that comes up short, fall back to discovery:** list recent org PRs and match by title/feature name, then *confirm* the match by reading the PR before trusting it. Don't assume — verify the sibling PR is actually the same feature.
    - Note where consumers live (UI repos, services) so Phase 1/2 can trace them.
-4. **Get the new code readable** — worktree the PR head so finders read the *enclosing* function in post-PR form (bugs hide in unchanged lines a PR re-exposes):
+5. **Get the new code readable** — worktree the PR head so finders read the *enclosing* function in post-PR form (bugs hide in unchanged lines a PR re-exposes):
    ```bash
    git fetch origin pull/<N>/head:pr-<N>-review
    git worktree add /tmp/pr<N>-wt pr-<N>-review
@@ -103,6 +108,7 @@ Can't fill every bracket from the changed code itself? Drop it, or convert it to
 - Can the data realistically reach the triggering state?
 - Does it genuinely contradict the ticket/conventions (i.e. it is *not* intended)?
 - **Is it caused or newly exposed by THIS PR?** A bug living only in unchanged lines is out of scope unless the PR newly reaches it (new caller, changed argument, removed guard). A pre-existing issue the PR merely sits near goes in the "what was dropped" summary, never as an inline comment.
+- **Not already handled on the PR** (re-run check, from Phase 0). It isn't a still-open comment to duplicate (yours or another reviewer's); the author hasn't already addressed it in a reply (intended / done / won't-fix); and it wasn't fixed in a commit since your last review. If any of those hold, drop it — or, if it's still open and genuinely unaddressed, note that rather than re-posting.
 - Is there observable user or system impact?
 - Is there a plausible fix?
 
@@ -163,11 +169,13 @@ python3 scripts/post_review_comments.py --pr <N> --comments /tmp/pr<N>-comments.
 
 `comments.json` is an array of `{path, line, body}` (optional `side`/`start_line`). The script auto-resolves repo + head SHA, **validates each anchor against the diff before posting** (off-diff anchors would 422), and reports per-comment success/skip/error. See the script header for `--dry-run`, `--repo`, `--commit`, `--summary`.
 
+**Dedupe before posting.** The script does not dedupe against existing comments — so first compare each finding to the PR comments you read in Phase 0 and **drop any already posted at the same file/line/gist** (yours or another reviewer's); report those as skipped-duplicate. On a re-run where the head SHA is unchanged, post nothing new unless a thread is still open and genuinely unaddressed.
+
 **Comment style:**
 - Plain prose, no severity labels, no `Blocking`/`🔴`, no prefix. The comment must stand on its own: *what* is wrong and *where*, *why it matters* (with the triggering condition), and an optional fix (code block if small).
 - **Cite the rule** it violates — the repo doc section or the bundled baseline section — woven into the prose, not as a label. It's what makes the comment defensible rather than an opinion.
 - **Prefer questions over accusations** when intent or config is uncertain. Not *"This is broken,"* but *"Is this endpoint expected to receive X from the UI? If so, this path may fail when Y."* — it's more accurate and far less abrasive.
-- **Footer: identify the assistant running the review** — `🤖 Claude review`, `🤖 Cursor review`, `🤖 Codex review`, etc. Use your own identity; don't hardcode another tool's name. Append the reviewer that raised it for provenance — e.g. `🤖 Claude review · [REVIEWER BE] Brody`.
+- **Footer: identify the assistant running the review** — `🤖 Claude review`, `🤖 Cursor review`, `🤖 Codex review`, etc. Use your own identity; don't hardcode another tool's name. Nothing else in the footer — the reviewer-persona tags (`[REVIEWER BE]` etc.) are a chat-only signal and must NOT appear in the posted comment.
 
 **Anchoring rules (avoid silent 422s):** an inline comment must land on a line in the diff — an added/context line (`side: RIGHT`, new-file number) or a deleted line (`side: LEFT`, old-file number). A finding about unchanged code can't be inlined there; anchor it on the nearest changed line and reference the real `path:line` in the body, or use a consolidated comment. Pin to the head SHA and warn that a later force-push marks comments outdated. A **submitted review can't be deleted** (only its body PUT-edited), so decide inline-vs-consolidated before posting.
 
