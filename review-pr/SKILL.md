@@ -146,22 +146,31 @@ Lead with the roster of reviewers that ran (e.g. *"Reviewers: `[REVIEWER BE] Bro
 
 Open with a one-line **verdict**: `PASS` (nothing worth posting), `CONCERNS(n)` (n findings), or `SKIP(reason)` (couldn't review — e.g. no diff, missing standards for the only relevant dimension). Keep it machine-readable; an autonomous loop will read it later.
 
-Then ask plainly:
+Then branch on the verdict:
+- **`PASS`** — nothing to comment, so **approve the PR** (Phase 5 → "Approve on PASS"). This is the one posting action you don't ask permission for — the user opted into it. Still announce it in chat: *"Verdict: PASS — approving."*
+- **`CONCERNS(n)`** — present the findings, then ask which to post and wait for an explicit go-ahead. Never post comments **or** approve on a CONCERNS verdict.
+  ```
+  Which ones of this I should post?
+
+  1. ...
+  2. ...
+  3. ...
+
+  Tell me the numbers of the ones you want to post or just "post all" if you want to post everything.
+  ```
+- **`SKIP(reason)`** — say why; post nothing, approve nothing.
+
+## Phase 5 — Approve (on PASS) or post (on command)
+
+**Approve on PASS.** When the verdict is a clean `PASS` — you covered the diff, zero findings survived, no open questions — approve the PR directly. This is the opted-in exception to the gate (a clean review approves itself; comments and change-requests still don't):
+
+```bash
+gh pr review <N> --approve --body "🤖 <AI> review — PASS, no issues found."
 ```
-Which ones of this I should post?
 
-1. ...
-2. ...
-3. ...
+Footer is your assistant identity only (no persona tags). If the reviewing `gh` account authored the PR, GitHub forbids self-approval — fall back to a plain PASS note: `gh pr review <N> --comment --body "🤖 <AI> review — PASS, no issues found."`. Approve only on `PASS`, never on `CONCERNS`/`SKIP`, and never `--request-changes` unless the user explicitly asks (see below).
 
-Tell me the numbers of the ones you want to post or just "post all" if you want to post everything.
-```
-
-and wait for an explicit go-ahead.
-
-## Phase 5 — Post (ONLY after an explicit command to post)
-
-When told to post, prefer **individual inline comments** — each its own resolvable thread the author closes one by one. Use the bundled script:
+**Post comments (only after an explicit command).** When told to post, prefer **individual inline comments** — each its own resolvable thread the author closes one by one. Use the bundled script:
 
 ```bash
 python3 scripts/post_review_comments.py --pr <N> --comments /tmp/pr<N>-comments.json
